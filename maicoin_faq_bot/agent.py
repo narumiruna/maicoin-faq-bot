@@ -11,7 +11,7 @@ from maicoin_faq_bot.retriever import MaiCoinFAQRetriever
 
 class MaiCoinFAQAgent:
 
-    def __init__(self, model_name='gpt-3.5-turbo-0613', faq_file: str = 'data/maicoin_faq_zh.json'):
+    def __init__(self, model_name='gpt-3.5-turbo-0613', faq_file: str = 'maicoin_faq_zh.json'):
         llm = ChatOpenAI(model_name=model_name)
         tools = [MaiCoinFAQRetriever.from_json(faq_file)]
         memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True)

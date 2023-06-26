@@ -1,0 +1,49 @@
+name: Deployment
+
+on:
+  workflow_dispatch:
+  push:
+    # tags:
+    #   - "v*.*.*"
+
+env:
+  UNIT: com.narumi.maicoin-faq-bot
+  WORKDIR: /Users/narumi/services/maicoin-faq-bot
+  PLIST_PATH: /Users/narumi/Library/LaunchAgents
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Stop and disable service
+        continue-on-error: true
+        working-directory: ${{ env.PLIST_PATH }}
+        run: |
+          launchctl stop ${{ env.UNIT }}
+          launchctl unload maicoin-faq-bot.plist
+
+      - name: Create .env file
+        run: |
+          echo BOT_TOKEN=${{ secrets.BOT_TOKEN }} > .env
+          echo OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} >> .env
+          echo DEVELOPER_CHAT_ID=${{ vars.DEVELOPER_CHAT_ID }} >> .env
+
+      - name: Install
+        run: |
+          pip install .
+
+      - name: Copy files
+        run: |
+          mkdir -p ${{ env.WORKDIR }} 
+          cp .env ${{ env.WORKDIR }}
+          cp maicoin_faq_zh.json ${{ env.WORKDIR }}
+          cp maicoin-faq-bot.plist ${{ env.PLIST_PATH }}
+
+      - name: Start service
+        working-directory: ${{ env.PLIST_PATH }}
+        run: |
+          launchctl load -w maicoin-faq-bot.plist
+          launchctl start ${{ env.UNIT }}
