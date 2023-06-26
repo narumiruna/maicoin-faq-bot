@@ -1,7 +1,6 @@
 from langchain.agents import AgentType
 from langchain.agents import initialize_agent
 from langchain.chat_models import ChatOpenAI
-from langchain.memory import ConversationBufferMemory
 from loguru import logger
 from telegram import Update
 from telegram.ext import ContextTypes

@@ -16,7 +16,7 @@ class MaiCoinFAQRetriever(BaseTool):
                         'Output MaiCoin FAQ article(s) that are relevant to the query string.')
 
     retriever: VectorStoreRetriever
-    max_output_chars: int = 3500
+    max_output_chars: int = 4000
 
     def _run(self, query: str) -> str:
         docs = self.retriever.get_relevant_documents(query)
@@ -39,7 +39,7 @@ class MaiCoinFAQRetriever(BaseTool):
         data = load_json(f)
 
         logger.info('splitting documents...')
-        docs = RecursiveCharacterTextSplitter(chunk_size=2000).split_documents(
+        docs = RecursiveCharacterTextSplitter().split_documents(
             [Document(page_content=d['body'], metadata={
                 'title': d['title'],
                 'url': d['url']
