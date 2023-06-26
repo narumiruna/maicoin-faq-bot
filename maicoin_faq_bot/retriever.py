@@ -16,7 +16,7 @@ class MaiCoinFAQRetriever(BaseTool):
                         'Output MaiCoin FAQ article(s) that are relevant to the query string.')
 
     retriever: VectorStoreRetriever
-    max_output_chars: int = 4000
+    max_output_chars: int = 3500
 
     def _run(self, query: str) -> str:
         docs = self.retriever.get_relevant_documents(query)
