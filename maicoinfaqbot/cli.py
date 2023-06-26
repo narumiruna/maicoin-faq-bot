@@ -1,2 +1,5 @@
+from .bot import start_bot
+
+
 def main():
-    print('Hello, World!')
+    start_bot()
