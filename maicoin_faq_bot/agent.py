@@ -45,7 +45,5 @@ class MaiCoinFAQAgent:
         agent_resp = self.agents[chat_id].run(update.message.text)
         logger.info('agent response: {}', agent_resp)
 
-        bot_resp = await context.bot.send_message(chat_id=chat_id,
-                                                  text=agent_resp,
-                                                  reply_to_message_id=update.message.id)
+        bot_resp = await context.bot.send_message(chat_id=chat_id, text=agent_resp)
         logger.info('bot response: {}', bot_resp)
