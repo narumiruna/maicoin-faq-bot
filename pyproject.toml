@@ -15,6 +15,7 @@ python-dotenv = "^1.0.0"
 chromadb = "^0.3.26"
 openai = "^0.27.8"
 tiktoken = "^0.4.0"
+telegraph = "^2.2.0"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^6.0.0"
