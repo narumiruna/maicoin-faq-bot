@@ -46,7 +46,7 @@ class MaiCoinFAQAgent:
         agent_resp = self.agents[chat_id].run(update.message.text)
         logger.info('agent response: {}', agent_resp)
 
-        if len(agent_resp) > 9500:
+        if len(agent_resp) > 10:
             agent_resp = short_text(agent_resp)
 
         bot_resp = await context.bot.send_message(chat_id=chat_id, text=agent_resp)
