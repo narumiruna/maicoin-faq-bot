@@ -39,7 +39,7 @@ class MaiCoinFAQRetriever(BaseTool):
         data = load_json(f)
 
         logger.info('splitting documents...')
-        docs = RecursiveCharacterTextSplitter().split_documents(
+        docs = RecursiveCharacterTextSplitter(chunk_size=2000).split_documents(
             [Document(page_content=d['body'], metadata={
                 'title': d['title'],
                 'url': d['url']
