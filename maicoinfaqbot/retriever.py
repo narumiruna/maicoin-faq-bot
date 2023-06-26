@@ -4,6 +4,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.tools import BaseTool
 from langchain.vectorstores import Chroma
 from langchain.vectorstores.base import VectorStoreRetriever
+from loguru import logger
 
 from .utils import load_json
 
@@ -34,11 +35,16 @@ class MaiCoinFAQRetriever(BaseTool):
 
     @classmethod
     def from_json(cls, f: str):
+        logger.info('loading json file: {}', f)
         data = load_json(f)
+
+        logger.info('splitting documents...')
         docs = RecursiveCharacterTextSplitter().split_documents(
             [Document(page_content=d['body'], metadata={
                 'title': d['title'],
                 'url': d['url']
             }) for d in data])
+
+        logger.info('creating vector store...')
         vectorstore = Chroma.from_documents(docs, embedding=OpenAIEmbeddings())
         return cls(retriever=vectorstore.as_retriever())
