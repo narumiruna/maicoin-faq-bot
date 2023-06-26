@@ -6,6 +6,7 @@ authors = ["なるみ"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+pydantic = "^1.10.9"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^6.0.0"
