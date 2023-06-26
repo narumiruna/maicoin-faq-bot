@@ -5,6 +5,7 @@ from langchain.memory import ConversationBufferMemory
 from loguru import logger
 from telegram import Update
 from telegram.ext import ContextTypes
+from telegraph import Telegraph
 
 from maicoin_faq_bot.retriever import MaiCoinFAQRetriever
 
@@ -45,5 +46,16 @@ class MaiCoinFAQAgent:
         agent_resp = self.agents[chat_id].run(update.message.text)
         logger.info('agent response: {}', agent_resp)
 
+        if len(agent_resp) > 9500:
+            agent_resp = short_text(agent_resp)
+
         bot_resp = await context.bot.send_message(chat_id=chat_id, text=agent_resp)
         logger.info('bot response: {}', bot_resp)
+
+
+def short_text(content: str):
+    telegraph = Telegraph()
+    telegraph.create_account(short_name='MaiCoin FAQ Bot')
+
+    response = telegraph.create_page(title='MaiCoin FAQ Bot', content=content)
+    return response['url']
