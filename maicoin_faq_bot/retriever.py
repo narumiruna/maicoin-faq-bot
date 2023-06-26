@@ -10,7 +10,7 @@ from .utils import load_json
 
 
 class MaiCoinFAQRetriever(BaseTool):
-    name: str = 'get_relevant_documents'
+    name: str = 'retrieve_maicoin_faq'
     description: str = ('A MaiCoin FAQ article retriever.'
                         'Input a query string.'
                         'Output MaiCoin FAQ article(s) that are relevant to the query string.')
