@@ -31,7 +31,6 @@ class MaiCoinFAQAgent:
         return initialize_agent(tools=self.tools,
                                 llm=self.llm,
                                 agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
-                                memory=ConversationBufferMemory(memory_key='chat_history', return_messages=True),
                                 verbose=True)
 
     async def chat(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
