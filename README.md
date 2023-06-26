@@ -12,5 +12,5 @@ pip install .
 export BOT_TOKEN=
 export OPENAI_API_KEY=
 
-maicoin_faq_bot
+maicoin-faq-bot
 ```
