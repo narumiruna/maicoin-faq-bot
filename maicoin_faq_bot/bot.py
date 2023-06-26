@@ -25,6 +25,7 @@ def start_bot():
     app = ApplicationBuilder().token(bot_token).build()
 
     developer_chat_id = os.environ.get('DEVELOPER_CHAT_ID')
+    logger.info('developer_chat_id: {}', developer_chat_id)
 
     async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
         """Log the error and send a telegram message to notify the developer."""
@@ -55,6 +56,7 @@ def start_bot():
 
     # add langchain bot
     agent = MaiCoinFAQAgent()
-    app.add_handler(MessageHandler(filters=filters.REPLY & filters.TEXT & (~filters.COMMAND), callback=agent.chat))
+    # app.add_handler(MessageHandler(filters=filters.REPLY & filters.TEXT & (~filters.COMMAND), callback=agent.chat))
+    app.add_handler(MessageHandler(filters=filters.TEXT, callback=agent.chat))
 
     app.run_polling()

@@ -7,7 +7,7 @@ from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
 
-from maicoinfaqbot.utils import load_json
+from maicoin_faq_bot.utils import load_json
 
 
 def main():

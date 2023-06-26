@@ -6,7 +6,7 @@ from loguru import logger
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from maicoinfaqbot.retriever import MaiCoinFAQRetriever
+from maicoin_faq_bot.retriever import MaiCoinFAQRetriever
 
 
 class MaiCoinFAQAgent:
@@ -24,7 +24,7 @@ class MaiCoinFAQAgent:
     async def chat(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         logger.info('update: {}', update)
 
-        agent_resp = self.agent.run(update.message.text.rstrip('/' + self.chat_command))
+        agent_resp = self.agent.run(update.message.text)
         logger.info('agent response: {}', agent_resp)
 
         bot_resp = await context.bot.send_message(chat_id=update.effective_chat.id,

@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "maicoinfaqbot"
+name = "maicoin-faq-bot"
 version = "0.1.0"
 description = ""
 authors = ["なるみ"]
@@ -29,4 +29,4 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-maicoinfaqbot = "maicoinfaqbot.cli:main"
+maicoin-faq-bot = "maicoin_faq_bot.cli:main"
