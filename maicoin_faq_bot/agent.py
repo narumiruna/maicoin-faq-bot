@@ -46,7 +46,7 @@ class MaiCoinFAQAgent:
         agent_resp = self.agents[chat_id].run(update.message.text)
         logger.info('agent response: {}', agent_resp)
 
-        if len(agent_resp) > 10:
+        if len(agent_resp) > 9500:
             agent_resp = short_text(agent_resp)
 
         bot_resp = await context.bot.send_message(chat_id=chat_id, text=agent_resp)
@@ -57,5 +57,5 @@ def short_text(content: str):
     telegraph = Telegraph()
     telegraph.create_account(short_name='MaiCoin FAQ Bot')
 
-    response = telegraph.create_page(title='MaiCoin FAQ Bot', content=content)
+    response = telegraph.create_page(title='MaiCoin FAQ Bot', html_content=content)
     return response['url']

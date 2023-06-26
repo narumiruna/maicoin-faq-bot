@@ -1,4 +1,4 @@
-from langchain.embeddings import OpenAIEmbeddings
+from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.tools import BaseTool
@@ -46,5 +46,5 @@ class MaiCoinFAQRetriever(BaseTool):
             }) for d in data])
 
         logger.info('creating vector store...')
-        vectorstore = Chroma.from_documents(docs, embedding=OpenAIEmbeddings())
+        vectorstore = Chroma.from_documents(docs, embedding=HuggingFaceEmbeddings())
         return cls(retriever=vectorstore.as_retriever())
