@@ -21,6 +21,15 @@ class MaiCoinFAQAgent:
                                       memory=memory,
                                       verbose=True)
 
+    def run(self):
+        while True:
+            try:
+                question = input("User: ")
+                resp = self.agent.run(question)
+                print('Agent:', resp)
+            except KeyboardInterrupt:
+                break
+
     async def chat(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         logger.info('update: {}', update)
 
