@@ -18,10 +18,15 @@ class MaiCoinFAQRetriever(BaseTool):
 
     def _run(self, query: str) -> str:
         docs = self.retriever.get_relevant_documents(query)
-        return (f'Query: {query}\n'
-                f'Page Title: {doc.metadata["title"]}\n'
-                f'Page URL: {doc.metadata["url"]}\n'
-                f'Page Content: {doc.page_content}\n' for doc in docs)
+
+        outputs = []
+        for doc in docs:
+            outputs.append((f'Query: {query}\n'
+                            f'Page Title: {doc.metadata["title"]}\n'
+                            f'Page URL: {doc.metadata["url"]}\n'
+                            f'Page Content: {doc.page_content}\n'))
+
+        return '\n\n'.join(outputs)
 
     async def _arun(self, query: str) -> str:
         return self._run(query)
