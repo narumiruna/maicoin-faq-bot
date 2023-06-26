@@ -15,6 +15,7 @@ class MaiCoinFAQRetriever(BaseTool):
                         'Output MaiCoin FAQ article(s) that are relevant to the query string.')
 
     retriever: VectorStoreRetriever
+    max_output_chars: int = 4000
 
     def _run(self, query: str) -> str:
         docs = self.retriever.get_relevant_documents(query)
@@ -26,7 +27,7 @@ class MaiCoinFAQRetriever(BaseTool):
                             f'Page URL: {doc.metadata["url"]}\n'
                             f'Page Content: {doc.page_content}\n'))
 
-        return '\n\n'.join(outputs)
+        return '\n\n'.join(outputs)[:self.max_output_chars]
 
     async def _arun(self, query: str) -> str:
         return self._run(query)
