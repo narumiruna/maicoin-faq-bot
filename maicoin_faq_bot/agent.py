@@ -1,6 +1,7 @@
 from langchain.agents import AgentType
 from langchain.agents import initialize_agent
 from langchain.chat_models import ChatOpenAI
+from langchain.memory import ConversationBufferMemory
 from loguru import logger
 from telegram import Update
 from telegram.ext import ContextTypes
@@ -30,6 +31,7 @@ class MaiCoinFAQAgent:
         return initialize_agent(tools=self.tools,
                                 llm=self.llm,
                                 agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
+                                memory=ConversationBufferMemory(memory_key='chat_history', return_messages=True),
                                 verbose=True)
 
     async def chat(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
