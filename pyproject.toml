@@ -11,6 +11,8 @@ loguru = "^0.7.0"
 cloudscraper = "^1.2.71"
 langchain = "^0.0.215"
 python-telegram-bot = "^20.3"
+python-dotenv = "^1.0.0"
+chromadb = "^0.3.26"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^6.0.0"
