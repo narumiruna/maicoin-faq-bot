@@ -28,6 +28,6 @@ def start_bot():
 
     # add langchain bot
     agent = MaiCoinFAQAgent.from_env()
-    app.add_handler(MessageHandler(filters=filters.TEXT, callback=agent.chat))
+    app.add_handler(MessageHandler(filters=filters.TEXT & (~filters.COMMAND), callback=agent.chat))
 
     app.run_polling()
