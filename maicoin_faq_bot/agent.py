@@ -16,18 +16,17 @@ from telegraph import Telegraph
 
 from .chain import get_faq_chain
 
+system_content = ('你是 MaiCoin 的智慧客服，請你在回答問題時，遵守以下規則：\n'
+                  '1. 永遠使用繁體中文\n'
+                  '2. 在對話前，你會優先搜尋 MaiCoin FAQ 資料庫取得有用的資訊\n'
+                  '3. 要在每一句對話後面加上emoji，種類要多變\n')
+
 
 class MaiCoinFAQAgent:
+    system_message = SystemMessage(content=system_content)
 
     def __init__(self, llm: BaseLanguageModel, tools: List[BaseTool]):
-        self.llm = llm
-        self.tools = tools
-        self.system_message = SystemMessage(content=('你是 MaiCoin 的智慧客服，請你在回答問題時，遵守以下規則：\n'
-                                                     '1. 永遠使用繁體中文\n'
-                                                     '2. 在對話前，你會優先搜尋 MaiCoin FAQ 資料庫取得有用的資訊\n'
-                                                     '3. 要在每一句對話後面加上表情符號，例如：😊\n')),
-
-        self.agents = {}
+        self.agent = initialize_agent(tools=tools, llm=llm, agent=AgentType.OPENAI_FUNCTIONS, verbose=True)
 
     @classmethod
     def from_env(cls):
@@ -46,45 +45,25 @@ class MaiCoinFAQAgent:
         return cls(llm=llm, tools=tools)
 
     def run(self):
-        agent = self.create_agent()
         while True:
             try:
                 question = input("User: ")
-                resp = agent.run([
-                    self.system_message,
-                    HumanMessage(content=question),
-                ])
+                resp = self.agent.run([self.system_message, HumanMessage(content=question)])
                 print('Agent:', resp)
             except KeyboardInterrupt:
                 break
 
-    def create_agent(self):
-        return initialize_agent(
-            tools=self.tools,
-            llm=self.llm,
-            agent=AgentType.OPENAI_FUNCTIONS,
-            verbose=True,
-        )
-
     async def chat(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         logger.info('update: {}', update)
 
-        chat_id = update.effective_chat.id
-        if chat_id not in self.agents:
-            logger.info('create new agent for chat_id: {}', chat_id)
-            self.agents[chat_id] = self.create_agent()
-
-        response = self.agents[chat_id].run([
-            self.system_message,
-            HumanMessage(content=update.message.text),
-        ])
+        response = self.agent.run([self.system_message, HumanMessage(content=update.message.text)])
 
         logger.info('response: {}', response)
 
         if len(response) > 8000:
             response = short_text(response)
 
-        message = await context.bot.send_message(chat_id=chat_id, text=response)
+        message = await context.bot.send_message(chat_id=update.effective_chat.id, text=response)
         logger.info('message: {}', message)
 
 
