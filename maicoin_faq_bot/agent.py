@@ -8,13 +8,13 @@ from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage
 from langchain.schema import SystemMessage
 from langchain.tools import BaseTool
-from langchain.tools import Tool
 from loguru import logger
 from telegram import Update
 from telegram.ext import ContextTypes
 from telegraph import Telegraph
 
-from .faq.chain import initialize_faq_chain
+from .faq import load_faq_vectorstore
+from .faq.tool import load_faq_tool
 
 system_content = ('你是 MaiCoin 的智慧客服，請你在回答問題時，遵守以下規則：\n'
                   '1. 永遠使用繁體中文\n'
@@ -32,16 +32,8 @@ class MaiCoinFAQAgent:
     def from_env(cls):
         model_name = os.environ.get('OPENAI_MODEL_NAME', 'gpt-3.5-turbo-0613')
         llm = ChatOpenAI(model_name=model_name, temperature=0.0)
-
-        tools = [
-            Tool.from_function(
-                name='MaiCoin-FAQ',
-                description=('Useful for when you need to answer questions about MaiCoin, '
-                             'MAX exchange or cryptocurrency in general. '
-                             'Input should be in the form of a question containing full context'),
-                func=initialize_faq_chain().run,
-            )
-        ]
+        retriever = load_faq_vectorstore().as_retriever()
+        tools = [load_faq_tool(llm, retriever=retriever)]
         return cls(llm=llm, tools=tools)
 
     def run(self):

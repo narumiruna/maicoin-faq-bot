@@ -16,8 +16,7 @@ class FAQDocuments(List[Document]):
 
         docs = []
         for d in data:
-            page_content = (f'Title: {d["title"]}\n'
-                            f'URL: {d["url"]}\n'
+            page_content = (f'{d["title"]}\n'
                             f'{d["body"]}')
             docs.append(Document(page_content=page_content))
 
