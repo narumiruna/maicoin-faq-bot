@@ -34,7 +34,7 @@ def get_faq_chain():
         docs.append(Document(page_content=page_content))
 
     logger.info('splitting documents...')
-    docs = RecursiveCharacterTextSplitter().split_documents(docs)
+    docs = RecursiveCharacterTextSplitter(chunk_size=3000).split_documents(docs)
 
     logger.info('creating vectorstore...')
     vectorstore = Chroma.from_documents(docs, embedding=OpenAIEmbeddings())
