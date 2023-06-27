@@ -24,9 +24,9 @@ class MaiCoinFAQRetriever(BaseTool):
         outputs = []
         for doc in docs:
             outputs.append((f'Query: {query}\n'
-                            f'Page Title: {doc.metadata["title"]}\n'
-                            f'Page URL: {doc.metadata["url"]}\n'
-                            f'Page Content: {doc.page_content}\n'))
+                            f'Title: {doc.metadata["title"]}\n'
+                            f'URL: {doc.metadata["url"]}\n'
+                            f'Content: {doc.page_content}\n'))
 
         return '\n\n'.join(outputs)[:self.max_output_chars]
 

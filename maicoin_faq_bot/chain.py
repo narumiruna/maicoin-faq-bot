@@ -5,6 +5,7 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.chat_models import ChatOpenAI
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.memory import ConversationBufferMemory
+from langchain.memory import ConversationBufferWindowMemory
 from langchain.schema import BaseRetriever
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -14,6 +15,38 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from maicoin_faq_bot.utils import load_json
+
+
+def get_faq_chain():
+    model_name = os.environ.get('OPENAI_MODEL_NAME', 'gpt-3.5-turbo-0613')
+    llm = ChatOpenAI(model_name=model_name)
+
+    json_file = os.environ.get('MAICOIN_FAQ_JSON', 'maicoin_faq_zh.json')
+    logger.info(f'loading json file: {json_file}')
+    data = load_json(json_file)
+
+    logger.info('creating documents...')
+    docs = []
+    for d in data:
+        page_content = (f'Title: {d["title"]}\n'
+                        f'URL: {d["url"]}\n'
+                        f'{d["body"]}')
+        docs.append(Document(page_content=page_content))
+
+    logger.info('splitting documents...')
+    docs = RecursiveCharacterTextSplitter().split_documents(docs)
+
+    logger.info('creating vectorstore...')
+    vectorstore = Chroma.from_documents(docs, embedding=OpenAIEmbeddings())
+
+    chain = ConversationalRetrievalChain.from_llm(
+        llm=llm,
+        memory=ConversationBufferWindowMemory(memory_key='chat_history', return_messages=True),
+        retriever=vectorstore.as_retriever(),
+        verbose=True,
+    )
+
+    return chain
 
 
 class MaiCoinFAQChain:

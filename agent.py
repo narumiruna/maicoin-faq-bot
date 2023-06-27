@@ -5,7 +5,7 @@ from maicoin_faq_bot.agent import MaiCoinFAQAgent
 
 def main():
     load_dotenv()
-    MaiCoinFAQAgent().run()
+    MaiCoinFAQAgent.from_env().run()
 
 
 if __name__ == '__main__':

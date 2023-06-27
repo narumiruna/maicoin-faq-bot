@@ -5,14 +5,14 @@ from langchain.agents import AgentType
 from langchain.agents import initialize_agent
 from langchain.base_language import BaseLanguageModel
 from langchain.chat_models import ChatOpenAI
-from langchain.memory import ConversationBufferMemory
 from langchain.tools import BaseTool
+from langchain.tools import Tool
 from loguru import logger
 from telegram import Update
 from telegram.ext import ContextTypes
 from telegraph import Telegraph
 
-from maicoin_faq_bot.retriever import MaiCoinFAQRetriever
+from .chain import get_faq_chain
 
 
 class MaiCoinFAQAgent:
@@ -28,9 +28,15 @@ class MaiCoinFAQAgent:
         model_name = os.environ.get('OPENAI_MODEL_NAME', 'gpt-3.5-turbo-0613')
         llm = ChatOpenAI(model_name=model_name, temperature=0.0)
 
-        faq_file = os.environ.get('MAICOIN_FAQ_FILE', 'maicoin_faq_zh.json')
-        tools = [MaiCoinFAQRetriever.from_json(faq_file)]
-
+        tools = [
+            Tool.from_function(
+                name='MaiCoin-FAQ',
+                description=('Useful for when you need to answer questions about MaiCoin, '
+                             'MAX exchange or cryptocurrency in general. '
+                             'Input should be in the form of a question containing full context'),
+                func=get_faq_chain().run,
+            )
+        ]
         return cls(llm=llm, tools=tools)
 
     def run(self):
@@ -44,11 +50,12 @@ class MaiCoinFAQAgent:
                 break
 
     def create_agent(self):
-        return initialize_agent(tools=self.tools,
-                                llm=self.llm,
-                                agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
-                                memory=ConversationBufferMemory(memory_key='chat_history', return_messages=True),
-                                verbose=True)
+        return initialize_agent(
+            tools=self.tools,
+            llm=self.llm,
+            agent=AgentType.OPENAI_FUNCTIONS,
+            verbose=True,
+        )
 
     async def chat(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         logger.info('update: {}', update)
