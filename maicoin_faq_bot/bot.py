@@ -52,9 +52,6 @@ def start_bot():
                                        text=message,
                                        parse_mode=ParseMode.HTML)
 
-        await context.bot.send_message(chat_id=update.effective_chat.id,
-                                       text='Something went wrong. Please try again later.')
-
     app.add_error_handler(error_handler)
 
     # add langchain bot
