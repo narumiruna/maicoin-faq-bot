@@ -1,7 +1,12 @@
+import os
+from typing import List
+
 from langchain.agents import AgentType
 from langchain.agents import initialize_agent
+from langchain.base_language import BaseLanguageModel
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
+from langchain.tools import BaseTool
 from loguru import logger
 from telegram import Update
 from telegram.ext import ContextTypes
@@ -12,11 +17,21 @@ from maicoin_faq_bot.retriever import MaiCoinFAQRetriever
 
 class MaiCoinFAQAgent:
 
-    def __init__(self, model_name='gpt-3.5-turbo-0613', faq_file: str = 'maicoin_faq_zh.json'):
-        self.llm = ChatOpenAI(model_name=model_name)
-        self.tools = [MaiCoinFAQRetriever.from_json(faq_file)]
+    def __init__(self, llm: BaseLanguageModel, tools: List[BaseTool]):
+        self.llm = llm
+        self.tools = tools
 
         self.agents = {}
+
+    @classmethod
+    def from_env(cls):
+        model_name = os.environ.get('OPENAI_MODEL_NAME', 'gpt-3.5-turbo-0613')
+        llm = ChatOpenAI(model_name=model_name, temperature=0.0)
+
+        faq_file = os.environ.get('MAICOIN_FAQ_FILE', 'maicoin_faq_zh.json')
+        tools = [MaiCoinFAQRetriever.from_json(faq_file)]
+
+        return cls(llm=llm, tools=tools)
 
     def run(self):
         agent = self.create_agent()
