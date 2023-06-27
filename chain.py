@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 
-from maicoin_faq_bot.chain import MaiCoinFAQChain
+from maicoin_faq_bot.faq.chain import MaiCoinFAQChain
 
 
 def main():

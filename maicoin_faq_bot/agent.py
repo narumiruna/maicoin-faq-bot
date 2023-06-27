@@ -14,7 +14,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 from telegraph import Telegraph
 
-from .chain import get_faq_chain
+from .faq.chain import initialize_faq_chain
 
 system_content = ('你是 MaiCoin 的智慧客服，請你在回答問題時，遵守以下規則：\n'
                   '1. 永遠使用繁體中文\n'
@@ -39,7 +39,7 @@ class MaiCoinFAQAgent:
                 description=('Useful for when you need to answer questions about MaiCoin, '
                              'MAX exchange or cryptocurrency in general. '
                              'Input should be in the form of a question containing full context'),
-                func=get_faq_chain().run,
+                func=initialize_faq_chain().run,
             )
         ]
         return cls(llm=llm, tools=tools)
