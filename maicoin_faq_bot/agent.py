@@ -43,14 +43,14 @@ class MaiCoinFAQAgent:
             logger.info('create new agent for chat_id: {}', chat_id)
             self.agents[chat_id] = self.create_agent()
 
-        agent_resp = self.agents[chat_id].run(update.message.text)
-        logger.info('agent response: {}', agent_resp)
+        response = self.agents[chat_id].run(update.message.text)
+        logger.info('response: {}', response)
 
-        if len(agent_resp) > 8000:
-            agent_resp = short_text(agent_resp)
+        if len(response) > 8000:
+            response = short_text(response)
 
-        bot_resp = await context.bot.send_message(chat_id=chat_id, text=agent_resp)
-        logger.info('bot response: {}', bot_resp)
+        message = await context.bot.send_message(chat_id=chat_id, text=response)
+        logger.info('message: {}', message)
 
 
 def short_text(content: str):

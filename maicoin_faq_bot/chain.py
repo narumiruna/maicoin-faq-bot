@@ -1,6 +1,5 @@
 import os
 
-from dotenv import load_dotenv
 from langchain.base_language import BaseLanguageModel
 from langchain.chains import ConversationalRetrievalChain
 from langchain.chat_models import ChatOpenAI
@@ -11,6 +10,8 @@ from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
 from loguru import logger
+from telegram import Update
+from telegram.ext import ContextTypes
 
 from maicoin_faq_bot.utils import load_json
 
@@ -25,7 +26,7 @@ class MaiCoinFAQChain:
 
     @classmethod
     def from_env(cls):
-        model_name = os.environ('OPENAI_MODEL_NAME', 'gpt-3.5-turbo-0613')
+        model_name = os.environ.get('OPENAI_MODEL_NAME', 'gpt-3.5-turbo-0613')
         llm = ChatOpenAI(model_name=model_name)
 
         json_file = os.environ.get('MAICOIN_FAQ_JSON', 'maicoin_faq_zh.json')
@@ -67,3 +68,17 @@ class MaiCoinFAQChain:
                 print('Agent:', resp)
             except KeyboardInterrupt:
                 break
+
+    async def chat(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        logger.info('update: {}', update)
+
+        chat_id = update.effective_chat.id
+        if chat_id not in self.chains:
+            logger.info('create new agent for chat_id: {}', chat_id)
+            self.chains[chat_id] = self.create_agent()
+
+        response = self.chains[chat_id].run(update.message.text)
+        logger.info('response: {}', response)
+
+        message = await context.bot.send_message(chat_id=chat_id, text=response)
+        logger.info('send message: {}', message)
