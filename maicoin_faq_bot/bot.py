@@ -12,7 +12,7 @@ from telegram.ext import ContextTypes
 from telegram.ext import MessageHandler
 from telegram.ext import filters
 
-from .agent import MaiCoinFAQAgent
+from .chain import MaiCoinFAQChain
 
 
 def start_bot():
@@ -58,7 +58,7 @@ def start_bot():
     app.add_error_handler(error_handler)
 
     # add langchain bot
-    agent = MaiCoinFAQAgent()
-    app.add_handler(MessageHandler(filters=filters.TEXT, callback=agent.chat))
+    chain = MaiCoinFAQChain.from_env()
+    app.add_handler(MessageHandler(filters=filters.TEXT, callback=chain.chat))
 
     app.run_polling()

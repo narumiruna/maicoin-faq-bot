@@ -30,15 +30,19 @@ class MaiCoinFAQChain:
         llm = ChatOpenAI(model_name=model_name)
 
         json_file = os.environ.get('MAICOIN_FAQ_JSON', 'maicoin_faq_zh.json')
-        logger.info(f'Loading json file: {json_file}')
+        logger.info(f'loading json file: {json_file}')
         data = load_json(json_file)
 
+        logger.info('creating documents...')
+        docs = []
+        for d in data:
+            page_content = (f'Title: {d["title"]}\n'
+                            f'URL: {d["url"]}\n'
+                            f'{d["body"]}')
+            docs.append(Document(page_content=page_content))
+
         logger.info('splitting documents...')
-        docs = RecursiveCharacterTextSplitter().split_documents(
-            [Document(page_content=d['body'], metadata={
-                'title': d['title'],
-                'url': d['url']
-            }) for d in data])
+        docs = RecursiveCharacterTextSplitter().split_documents(docs)
 
         logger.info('creating vectorstore...')
         vectorstore = Chroma.from_documents(docs, embedding=OpenAIEmbeddings())
@@ -50,12 +54,10 @@ class MaiCoinFAQChain:
         memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True)
 
         logger.info('creating chain...')
-        chain = ConversationalRetrievalChain.from_llm(
-            llm=self.llm,
-            memory=memory,
-            retriever=self.retriever,
-            verbose=True,
-        )
+        chain = ConversationalRetrievalChain.from_llm(llm=self.llm,
+                                                      memory=memory,
+                                                      retriever=self.retriever,
+                                                      verbose=True)
 
         return chain
 
@@ -74,8 +76,8 @@ class MaiCoinFAQChain:
 
         chat_id = update.effective_chat.id
         if chat_id not in self.chains:
-            logger.info('create new agent for chat_id: {}', chat_id)
-            self.chains[chat_id] = self.create_agent()
+            logger.info('create new chain for chat_id: {}', chat_id)
+            self.chains[chat_id] = self.create_chain()
 
         response = self.chains[chat_id].run(update.message.text)
         logger.info('response: {}', response)
