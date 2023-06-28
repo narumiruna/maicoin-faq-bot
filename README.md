@@ -1,5 +1,7 @@
 # MaiCoin FAQ Bot
 
+<img width="1139" alt="image" src="https://github.com/narumiruna/maicoin-faq-bot/assets/4680567/5119c564-9de3-48cf-aff8-a80d2db3f80e">
+
 ## Instal
 
 ```sh
