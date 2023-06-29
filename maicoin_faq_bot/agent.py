@@ -16,10 +16,10 @@ from telegraph import Telegraph
 from .faq import load_faq_vectorstore
 from .faq.tool import load_faq_tool
 
-system_content = ('你是 MaiCoin 的智慧客服，請你在回答問題時，遵守以下規則：\n'
-                  '1. 你會永遠使用繁體中文回答\n'
-                  '2. 你會優先搜尋 MaiCoin FAQ 資料庫取得有用的資訊\n'
-                  '3. 你會在每一句對話後面加上emoji，種類要多變\n')
+system_content = ('你是 MaiCoin 的智慧客服\n'
+                  '1. 永遠使用繁體中文\n'
+                  '2. 優先搜尋 MaiCoin FAQ 取得有用的資訊\n'
+                  '3. 在每一句對話後面加上emoji，種類要多變\n')
 
 
 class MaiCoinFAQAgent:
