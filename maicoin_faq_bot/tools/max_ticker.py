@@ -25,11 +25,7 @@ class MAXTicker(BaseTool):
         return (f'Market: {market}\n'
                 f'Buy: {data["buy"]}\n'
                 f'Sell: {data["sell"]}\n'
-                f'Open: {data["open"]}\n'
-                f'Low: {data["low"]}\n'
-                f'High: {data["high"]}\n'
-                f'Last: {data["last"]}\n'
-                f'Volume: {data["vol"]}\n')
+                f'Last: {data["last"]}\n')
 
     def _arun(self, symbol: str):
         return self._run(symbol)
