@@ -15,7 +15,6 @@ from telegraph import Telegraph
 
 from .tools import MAXTicker
 from .tools import load_faq_tool
-from .vectorstores import load_faq_vectorstore
 
 system_content = ('你是 MaiCoin 的智慧客服\n'
                   '1. 永遠使用繁體中文\n'
@@ -33,9 +32,8 @@ class MaiCoinFAQAgent:
     def from_env(cls):
         model_name = os.environ.get('OPENAI_MODEL_NAME', 'gpt-3.5-turbo-0613')
         llm = ChatOpenAI(model_name=model_name, temperature=0.0)
-        retriever = load_faq_vectorstore().as_retriever()
         tools = [
-            load_faq_tool(llm, retriever=retriever),
+            load_faq_tool(llm),
             MAXTicker(),
         ]
         return cls(llm=llm, tools=tools)
