@@ -15,7 +15,6 @@ def load_faq_tool(llm: BaseLanguageModel, retriever: VectorStoreRetriever, max_o
 
     def _run(query):
         res = chain.run(query)[:max_output_chars]
-        print(res)
         return res
 
     return Tool.from_function(
