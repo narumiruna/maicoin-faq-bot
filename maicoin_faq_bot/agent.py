@@ -13,9 +13,9 @@ from telegram import Update
 from telegram.ext import ContextTypes
 from telegraph import Telegraph
 
-from .faq import load_faq_vectorstore
-from .faq.tool import load_faq_tool
 from .tools import MAXTicker
+from .tools import load_faq_tool
+from .vectorstores import load_faq_vectorstore
 
 system_content = ('你是 MaiCoin 的智慧客服\n'
                   '1. 永遠使用繁體中文\n'
