@@ -5,7 +5,7 @@ from langchain.agents import AgentType
 from langchain.agents import initialize_agent
 from langchain.base_language import BaseLanguageModel
 from langchain.chat_models import ChatOpenAI
-from langchain.schema import HumanMessage
+from langchain.memory import ConversationBufferWindowMemory
 from langchain.schema import SystemMessage
 from langchain.tools import BaseTool
 from loguru import logger
@@ -23,10 +23,14 @@ system_content = ('你是 MaiCoin 的智慧客服\n'
 
 
 class MaiCoinFAQAgent:
-    system_message = SystemMessage(content=system_content)
 
     def __init__(self, llm: BaseLanguageModel, tools: List[BaseTool]):
-        self.agent = initialize_agent(tools=tools, llm=llm, agent=AgentType.OPENAI_FUNCTIONS, verbose=True)
+        self.agent = initialize_agent(tools=tools,
+                                      llm=llm,
+                                      agent=AgentType.OPENAI_FUNCTIONS,
+                                      agent_kwargs=dict(system_message=SystemMessage(content=system_content)),
+                                      memory=ConversationBufferWindowMemory(memory_key='chat_history'),
+                                      verbose=True)
 
     @classmethod
     def from_env(cls):
@@ -42,7 +46,7 @@ class MaiCoinFAQAgent:
         while True:
             try:
                 question = input("User: ")
-                resp = self.agent.run([self.system_message, HumanMessage(content=question)])
+                resp = self.agent.run(question)
                 print('Agent:', resp)
             except KeyboardInterrupt:
                 break
@@ -50,7 +54,7 @@ class MaiCoinFAQAgent:
     async def chat(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         logger.info('update: {}', update)
 
-        response = self.agent.run([self.system_message, HumanMessage(content=update.message.text)])
+        response = self.agent.run(update.message.text)
 
         logger.info('response: {}', response)
 
