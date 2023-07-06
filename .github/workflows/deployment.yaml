@@ -30,6 +30,9 @@ jobs:
           echo BOT_TOKEN=${{ secrets.BOT_TOKEN }} > .env
           echo OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} >> .env
           echo DEVELOPER_CHAT_ID=${{ vars.DEVELOPER_CHAT_ID }} >> .env
+          echo LANGCHAIN_TRACING_V2=true >> .env
+          echo LANGCHAIN_ENDPOINT=https://api.langchain.plus >> .env
+          echo LANGCHAIN_API_KEY=${{ secrets.LANGCHAIN_API_KEY }} >> .env
 
       - name: Install
         run: |
