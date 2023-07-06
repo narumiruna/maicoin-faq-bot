@@ -33,6 +33,7 @@ jobs:
           echo LANGCHAIN_TRACING_V2=true >> .env
           echo LANGCHAIN_ENDPOINT=https://api.langchain.plus >> .env
           echo LANGCHAIN_API_KEY=${{ secrets.LANGCHAIN_API_KEY }} >> .env
+          echo LANGCHAIN_PROJECT=maicoin-faq-bot >> .env
 
       - name: Install
         run: |
