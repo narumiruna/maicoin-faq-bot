@@ -16,14 +16,12 @@ from telegraph import Telegraph
 from .tools import MAXTicker
 from .tools import create_faq_tool
 
-system_content = (
-    "你是 MaiCoin 的智慧客服\n"
-    "1. 永遠使用繁體中文\n"
-    "2. 優先搜尋 MaiCoin FAQ 取得有用的資訊\n"
-    "3. 在每一句對話後面加上emoji，種類要多變\n"
-    "4. 不知道時就說不知道，不要亂猜\n"
-    "回答盡可能簡短"
-)
+SYSTEM_CONTENT = """你是 MaiCoin 的智慧客服
+永遠使用繁體中文
+會使用 faq_search 取得 MaiCoin FAQ 的資訊
+在每一句對話後面加上emoji，種類要多變
+不知道時就說不知道，不要亂猜
+"""
 
 
 class MaiCoinFAQAgent:
@@ -32,7 +30,7 @@ class MaiCoinFAQAgent:
             tools=tools,
             llm=llm,
             agent=AgentType.OPENAI_FUNCTIONS,
-            agent_kwargs={"system_message": SystemMessage(content=system_content)},
+            agent_kwargs={"system_message": SystemMessage(content=SYSTEM_CONTENT)},
             memory=ConversationBufferWindowMemory(memory_key="chat_history"),
             verbose=True,
         )
