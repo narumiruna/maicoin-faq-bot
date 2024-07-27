@@ -1,2 +1,3 @@
-from .faq import load_faq_tool
+from .faq import FAQTool
+from .faq import create_faq_tool
 from .max_ticker import MAXTicker
