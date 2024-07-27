@@ -13,16 +13,16 @@ from .error import ErrorHandler
 
 
 def start_bot():
-    load_dotenv('.env')
+    load_dotenv(".env")
 
-    bot_token = os.environ.get('BOT_TOKEN')
+    bot_token = os.environ.get("BOT_TOKEN")
     if bot_token is None:
-        raise ValueError('BOT_TOKEN is not set')
+        raise ValueError("BOT_TOKEN is not set")
 
     app = ApplicationBuilder().token(bot_token).build()
 
-    developer_chat_id = os.environ.get('DEVELOPER_CHAT_ID')
-    logger.info('developer_chat_id: {}', developer_chat_id)
+    developer_chat_id = os.environ.get("DEVELOPER_CHAT_ID")
+    logger.info("developer_chat_id: {}", developer_chat_id)
 
     app.add_error_handler(ErrorHandler.from_env())
 

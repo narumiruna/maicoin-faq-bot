@@ -2,7 +2,7 @@
 name = "maicoin-faq-bot"
 version = "0.3.1"
 description = ""
-authors = ["なるみ <toucans-cutouts0f@icloud.com>"]
+authors = ["narumi <toucans-cutouts0f@icloud.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -21,12 +21,10 @@ duckduckgo-search = "^3.8.3"
 faiss-cpu = "^1.7.4"
 
 [tool.poetry.group.dev.dependencies]
-flake8 = "^6.0.0"
-yapf = "^0.33.0"
-toml = "^0.10.2"
 pytest = "^7.3.1"
-coverage = "^7.2.7"
-isort = "^5.12.0"
+pytest-cov = "^5.0.0"
+ruff = "^0.5.5"
+toml = "^0.10.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -34,3 +32,32 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 maicoin-faq-bot = "maicoin_faq_bot.cli:main"
+
+[tool.ruff]
+exclude = ["build"]
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "B",   # flake8-bugbear
+    "C",   # flake8-comprehensions
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "SIM", # flake8-simplify
+    "UP",  # pyupgrade
+    "W",   # pycodestyle warnings
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "F403"]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+
+[tool.pytest.ini_options]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.mypy]
+ignore_missing_imports = true

@@ -6,25 +6,18 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-
     strategy:
-      max-parallel: 1
       matrix:
         python-version: [3.9]
         poetry-version: [1.5.1]
-
     steps:
-      - uses: actions/checkout@v3
-
-      - uses: abatilo/actions-poetry@v2
-        with:
-          poetry-version: ${{ matrix.poetry-version }}
-
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: poetry
-
+      - uses: narumiruna/setup-poetry@v1
+        with:
+          poetry-version: ${{ matrix.poetry-version }}
       - name: Publish
         env:
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
